@@ -232,6 +232,122 @@ from country
 where locate(' ', name) > 0
 order by pais;
 
+use world;
 
+select name, replace(name, "Gu", "Yu") as REMPLAZO
+from country
+where region = "South America";
+
+select name, locate('Gu', name) as RemYu,
+replace(name, "Gu", "Yu") as REMPLAZO
+from country
+where region ="South America" and locate('Gu', name) > 0;
+
+
+-- MAX() devuelve el valor máximo de una tabla
+select max(lifeexpectancy) from country;
+
+-- MIN() devuelve el valor mínimo de una tabla
+select min(lifeexpectancy) from country;
+
+
+-- DATE_FORMAT() Formatea una fecha
+-- NOW() toma la fecha actual
+select date_format(now(), '%d/%m/%Y') as fecha_col;
+
+-- ROUND() redondea un numero y el número dice la cantidad de números redondeando el último
+
+
+-- IF() Cálculos condicionales
+select name, format(population, 0) as Poblacion,
+if(population < 20000000, "Despoblado", if(population < 40000000, "Poblado", "Sobrepoblado")) as Estado
+from country
+where region = "South America";
+
+-- EJERCICIO
+-- Calcular la densidad de población de los paises de América
+-- Si la densidad de población es mayor al 30 h/km2 entonces mostrar "super-poblado"
+-- Si está entre [20 - 30]h/km2 está poblado
+-- Si está entre [10 - 20]h/km2 está poco poblado
+-- si es menor que el 10 h/km2 mostrar despoblado
+
+select * from country;
+
+select surfacearea, name, region, format(population, 0) as Poblacion, format((Population/surfacearea),0) as Densidad,
+if ((Population/surfacearea) < 10, "Despoblado", 
+if ((Population/surfacearea) < 20, "poco poblado", 
+if ((Population/surfacearea) < 30, "Poblado", "super-poblado"))) as Estado
+from country
+where continent = "South America" or continent = "North America" 
+order by Densidad desc;
+
+
+-- TALLER
+-- Cual es el idioma con el nombre más largo hablado en el mundo. También indique
+-- qué países hablan ese idioma. El listado debe estar ordenado alfabéticamente por
+-- nombre de país.
+
+select * from countrylanguage;
+
+select Language, CountryCode, length(Language) as Tamaño
+from countrylanguage
+where max(length(Language));
+
+select * from country;
+
+CREATE TABLE maxLang AS
+	SELECT C.Language, C.CountryCode, C.max(length(Language))
+    FROM world.countrylanguage AS C
+    WHERE C.lenght = "Europe" AND C.LifeExpectancy IS NOT NULL
+    ORDER BY C.LifeExpectancy
+    LIMIT 5;
+
+-- II. Muestre un listado del año de independencia de cada país. Si aún no se ha
+-- independizado muestre el vano “N/A”
+
+select * from country;
+
+select name as Nombre,
+if (indepYear is null, "N/A", indepYear) as Independencia
+from country;
+
+-- III. Muestre un listado con los países “recién independizados” y “antiguamente  independizados”. 
+-- Es recién independizado si su fecha de independizado es  posterior a 1899. 
+
+select name as Nombre,
+if (indepYear > 1899, "Recién independizado", "Antiguamente independizado") as Independencia
+from country
+where indepYear is not null;
+
+-- IV. Cuál es el promedio de nivel de vida de los países africanos.
+
+select avg(lifeExpectancy) as Promedio_vida_África
+from country
+where continent = "Africa";
+
+-- V. Cuál es el país con menor nivel de vida. 
+
+select MIN(lifeExpectancy)
+from country;
+
+select name, lifeExpectancy
+from country
+where lifeExpectancy = 83.5;
+
+-- VI. Cuál es el país con mayor nivel de vida. 
+
+select MAX(lifeExpectancy)
+from country;
+
+select name, lifeExpectancy
+from country
+where lifeExpectancy = 37.2;
+
+-- VII. Muestre un listado de los países de América y cuanta es la capacidad de repartir su  riqueza 
+-- entre su densidad de población. GNP = PIB. El listado debe estar ordenado  descendentemente 
+-- por capacidad de repartir riqueza, luego por nombre  ascendentemente. La capacidad de repartir 
+-- riqueza debe mostrarse en separación de miles y con dos decimales.
+
+select * from country;
 
 
