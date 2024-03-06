@@ -350,4 +350,94 @@ where lifeExpectancy = 37.2;
 
 select * from country;
 
+use world;
+
+select name,
+region,
+GNP,
+format(Population,0) as Poblacion,
+format(Surfacearea,0) as Area,
+(Population/SurfaceArea) as Densidad,
+format(GNP/(Population/SurfaceArea),2) as Capacidad_Riqueza
+from country
+where continent = "North America" or continent = "South America"
+order by GNP/(Population/SurfaceArea) desc, name;
+
+select name, 
+substring(name, locate(' ', name) + 1) as SegundoNombre
+from country
+where continent = "Europe" and locate(' ', name) > 0;
+
+
+select seg_nombre, 
+	locate(" ", name) as pos2,
+    if(locate(" ", seg_nombre) = 0,
+		seg_nombre,
+		substr(seg_nombre, 1, locate(" ", seg_nombre)-1)) as segundo_nombre
+from
+	(select name, 
+		locate(" ", name) as esp1, 
+		substr(name, locate(" ", name) + 1) as seg_nombre
+from country
+where Continent = "Europe" and locate(" ", name) > 0) as S;
+
+-- Producto Cruz: todos los datos revueltos
+select C.code, C.name, D.id, D.name, D.countrycode
+from country as C, city as D;
+
+-- Intersección INNER JOIN (NATURAL JOIN, JOIN)
+-- Ciudades de Colombia
+select P.name, C.name
+from country as P
+inner join city as C on P.code = C.countrycode
+where P.name = "Colombia";
+
+
+-- LEFT JOIN
+-- Todos los elementos del conjunto A y donde no exista relación con B es Null
+select L.language, P.name
+from countrylanguage as L
+left join country as P on L.countrycode = P.code;
+
+select * from countrylanguage;
+
+
+-- LEFT JOIN
+-- Todos los elementos del conjunto B y donde no exista relación con A es Null
+select P.name, C.name
+from city as C
+right join country as P on C.countrycode = P.code
+where P.name = "Colombia";
+
+desc countrylanguage;
+insert into countrylanguage (countrycode, language, isofficial, percentage) values ("ZZZ", "Marciano", "T", "100");
+
+
+
+-- Ejercicio de orquestas
+select P.name, C.name
+from country as P
+inner join city as C on P.code = C.countrycode
+where P.name = "Colombia";
+
+select O,name, C.year
+from orchestras as O
+inner join concerts as C on O.city_origin = C.city
+where C.year = 2013;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
