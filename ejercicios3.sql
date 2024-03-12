@@ -45,6 +45,7 @@ where P.id_fabricante = F.id;
     
 SELECT DISTINCT f.nombre
 FROM fabricante f
+inner join producto P on P.id_fabricante = f.id
 WHERE (
     SELECT COUNT(*)
     FROM producto p
@@ -66,8 +67,24 @@ SELECT DISTINCT f.nombre
 FROM fabricante f
 WHERE contador >= 1;
 
+/* 3. Devuelve un listado con los nombres de los fabricantes y el número de productos que tiene cada uno con un precio
+superior o igual a $220. el listado debe mostrar el nombre de todos los fabricantes, es decir, si hay algún fabricante
+que no tiene productos con un precio superior o igual a $220 deberá aparecer en el listado con un valor igual a 0
+en el número de productos.
 
+*/
 
+CREATE OR REPLACE VIEW fabricantes_220 AS
+select f1.nombre as fabricante, f1.id AS Id_view
+FROM fabricante as f1, producto as p1
+where p1.Precio >= 220 and f1.id = p1.id_fabricante;
 
+SELECT distinct fabricante.nombre, 
+(select count(Fabricante) 
+	from fabricantes_220
+	where Fabricante = fabricante.nombre) AS count_fabr 
+FROM fabricante
+LEFT JOIN (SELECT * FROM fabricantes_220) AS fabr_220 ON fabricante.id = Id_view
+ORDER BY count_fabr desc;
 
 
