@@ -162,7 +162,6 @@ CREATE TABLE Cita (
     foreign key(DosisID) references Dosis (DosisID),
     foreign key(MedicamentoID) references Medicamento (MedicamentoID),
     foreign key (PacienteID) references Paciente(PacienteID)
-    
 );
 
 CREATE TABLE Tratamiento (
@@ -194,6 +193,17 @@ CREATE TABLE Med_Dos (
 CREATE TABLE Dosis (
 	DosisID int primary key,
     cantidad varchar(100)
-)
+);
+
+-- Consulta:
+-- Pacientes que fueron tratados en el 2022. Indique el id del paciente, nombre, 
+-- fecha consulta, nombre médico y tratamiento
+
+select P.pacienteID, P.nombre, C.fechaVisita, M.NombreMedico, T.DescrTrat
+from cita C
+inner join paciente P on C.pacienteID = P.pacienteID
+inner join medico M on M.medicoID = C.medicoID
+inner join tratamiento T on T.tratID = C.tratID
+where year(C.fechaVisita) = 2022;
 
 

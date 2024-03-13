@@ -83,7 +83,7 @@ right join vehiculo V on E.vhc_id = V.vhc_id;
 
 
 -- EJERCICIOS DE CLASSROOM
-
+create database world;
 use world;
 -- Con la base de datos Worl hacer las siguientes consultas
 
@@ -169,6 +169,11 @@ where District = "Santander";
 select * from countrylanguage
 where CountryCode = "COL";
 
+select distinct La.language
+from city as Ci
+join countrylanguage as La on Ci.CountryCode = La.CountryCode
+where Ci.District = "Santander" and La.Isofficial="F";
+
 select Ci.District, La.*
 from city as Ci
 left join countrylanguage as La on Ci.CountryCode = La.CountryCode
@@ -197,6 +202,35 @@ select Co.name, La.*
 from country as Co
 right join countrylanguage as La on Co.code = La.CountryCode
 where La.Isofficial="F";
+
+-- ejercicio número 6
+-- paises que no tienen lenguaje oficial registrado
+select distinct c.name, cl.countrycode
+from countrylanguage as cl
+inner join country as c on c.code = cl.countrycode
+where cl.countrycode not in (select distinct countrycode
+							 from countrylanguage
+							 where IsOfficial="T" or IsOfficial is null);
+
+select *
+from countrylanguage
+where countrycode = "ATA";
+
+select *
+from countrylanguage as cl
+inner join country as c on c.code = cl.countrycode
+where cl.countrycode not in (select distinct countrycode
+							 from countrylanguage
+							 where IsOfficial="T");
+
+
+-- ejercicio 7
+
+select *
+from country as c
+left join countrylanguage as cl on c.code = cl.countrycode
+where c.continent = "Asia" and cl.language = "Spanish"
+order by c.population desc;
 
 -- CONSULTAS ANIDADAS
 -- Mostrar una lista de paises donde su poblacion es mayor que el promedio de la poblacion de todos los los paises
@@ -231,3 +265,5 @@ where (P.continent = "North America" or P.continent= "South America") and
 		C1.Population > (select avg(C2.Population) 
 						 from city as C2
                          where C2.countrycode = C1.countrycode);
+                         
+                         
