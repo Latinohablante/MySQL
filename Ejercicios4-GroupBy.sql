@@ -176,9 +176,10 @@ select F.nombre, count(P.id_fabricante) "cant. prod > 180"
 from producto P
 inner join fabricante F on P.id_fabricante = F.id
 where P.precio >=180
-group by  F.nombre
+group by  P.id_fabricante
 ORDER BY count(P.id_fabricante);
 
+-- Agrupando por el id del fabricante es más eficiente porque es una llave principal
 /*
 SEGUNDA PARTE
 EJERCICIO DE TIENDA INFORMÁTICA

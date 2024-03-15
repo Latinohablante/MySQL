@@ -162,7 +162,7 @@ from country Co
 inner join countrylanguage CL on CL.CountryCode = Co.Code
 where upper(Co.Name) = "Colombia";
 
-
+use world;
 
 DELIMITER $$
 CREATE PROCEDURE sumarHablantes(INOUT hablantes INT, in nombrePais varchar(100))
@@ -172,7 +172,7 @@ BEGIN
     from country Co
 	inner join countrylanguage CL on CL.CountryCode = Co.Code
     where upper(Co.Name) = upper(nombrePais);
-    SET hablantes = hablantes + tot_hablantes;
+    SET hablantes = if (tot_hablantes is null, 0, hablantes + tot_hablantes);
 END $$
 DELIMITER ;
 
@@ -191,3 +191,96 @@ CALL sumarHablantes(@hablantes, "Peru");
 CALL sumarHablantes(@hablantes, "French");
 SELECT @hablantes AS TOThablantes;
 SELECT @beneficio_acumulado AS BeneficioTotal;
+
+
+-- Copiar codigo de Estructura IF Then
+
+
+-- Estructura LOOP
+-- Acciones a repetir
+/*
+LOOP
+	IF condición_salida THEN
+		LEAVE loop_label;
+	END IF;
+END LOOP loop_label
+*/
+
+-- Ejemplo LOOP
+-- Queremos aumentar el salario de los empleadoe en un 10% hasta que alcance un máximo de $5000
+
+DELIMITER //
+DELIMITER ;
+
+/*
+REPEAT
+  -- Acciones a repetir
+UNTIL condicion
+END REPEAT;
+*/
+
+-- Ejemplo REPEAT
+
+-- Aumentar el salario de los empleados en un 5% repetidamente hasta que todos
+-- tengan un salario mínimo de $3000
+
+DELIMITER //
+
+CREATE PROCEDURE AumentarSalarios()
+BEGIN
+	LOOP
+		UPDATE empleados SET salario = salario * 1.05 WHERE salario < 3000;
+        UNTIL (SELECT COUNT(*) FROM empleados WHERE salario < 3000)
+        END REPEAT;
+        -- esta condicion se repite mientras sea falsa, al ser verdadera cambia
+END //
+
+DELIMITER ;
+
+
+-- ESTRUCTURA WHILE 
+
+WHILE condicion DO
+	-- Acciones a repetir
+END WHILE;
+
+-- EJEMPLO WHILE
+
+-- queremos contar cuántos empleados tienen un salario mayor a $4000
+
+DELIMITER //
+
+CREATE PROCEDURE ContarEmpleadosAltosSalarios()
+BEGIN
+	DECLARE contador 
+
+
+-- ESTRUCTURA CASE
+
+CASE expresion
+	WHEN valor1 THEN
+		-- Acciones para valor1
+	WHEN valor2 THEN
+		-- Acciones para valor2
+	ELSE
+		-- Acciones si no se cumple ninguno de los casos anteriores
+END CASE;
+DELIMITER ;
+
+-- ERROR 1062: Dato duplicado
+
+USE tienda;
+
+delimiter $$
+CREATE procedure insertFabricante(in idfab int, in nomfab varchar(100))
+begin 
+	declare exit handler for 1062 select concat("Error, el fabricante código ", idfab, " ya existe") as Error;
+    insert into fabricante values (idfab, nomfab);
+end $$
+delimiter ;
+
+drop procedure insertFabricante;
+
+use tienda;
+call insertFabricante(10, "Oppo");
+call insertFabricante(10, "Motorola");

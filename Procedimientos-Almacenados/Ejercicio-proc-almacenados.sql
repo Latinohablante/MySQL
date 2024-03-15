@@ -1,0 +1,12 @@
+-- SOLUCION DE EJERCICIOS
+
+-- PROCEDIMIENTOS ALMACENADOS
+
+SELECT * FROM Emp;
+
+DELIMITER //
+CREATE PROCEDURE empleadosFecha(IN dep int, IN fecha_ini date, IN fecha_fin date)
+BEGIN
+	DECLARE 
+
+
